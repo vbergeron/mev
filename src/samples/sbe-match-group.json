@@ -1,0 +1,122 @@
+{
+  "explainVersion": "2",
+  "queryPlanner": {
+    "namespace": "mev.orders",
+    "parsedQuery": { "status": { "$eq": "delivered" } },
+    "queryHash": "5E0D2C11",
+    "planCacheKey": "A71B3F02",
+    "optimizationTimeMillis": 1,
+    "winningPlan": {
+      "isCached": false,
+      "queryPlan": {
+        "stage": "GROUP",
+        "planNodeId": 3,
+        "inputStage": {
+          "stage": "FETCH",
+          "planNodeId": 2,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "planNodeId": 1,
+            "keyPattern": { "status": 1, "createdAt": -1 },
+            "indexName": "status_1_createdAt_-1",
+            "isMultiKey": false,
+            "direction": "forward",
+            "indexBounds": { "status": ["[\"delivered\", \"delivered\"]"], "createdAt": ["[MaxKey, MinKey]"] }
+          }
+        }
+      },
+      "slotBasedPlan": {
+        "slots": "$$RESULT=s12 env: { s1 = Nothing (SEARCH_META), s3 = 1730000000000 (NOW) }",
+        "stages": "[3] project [s12 = newObj(\"_id\", s9, \"total\", s10, \"n\", s11)]\n[3] group [s9] [s10 = sum(s7), s11 = count()] spillSlots[s13, s14] mergingExprs[sum(s13), sum(s14)]\n[3] project [s9 = fillEmpty(s8, null)]\n[2] nlj inner [] [s2, s4, s5, s6] \n    left\n        [1] ixseek KS(3C64656C69766572656400F0FE04) KS(3C64656C69766572656400F00104) s6 s2 s4 s5 [] @\"status_1_createdAt_-1\" true\n    right\n        [2] limit 1ll\n        [2] seek s2 s7 s8 s5 s4 s6 [amount, channel] @\"orders\""
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 4,
+    "executionTimeMillis": 96,
+    "totalKeysExamined": 101342,
+    "totalDocsExamined": 101341,
+    "executionStages": {
+      "stage": "project",
+      "planNodeId": 3,
+      "nReturned": 4,
+      "executionTimeMillisEstimate": 92,
+      "opens": 1,
+      "closes": 1,
+      "saveState": 101,
+      "restoreState": 101,
+      "isEOF": 1,
+      "inputStage": {
+        "stage": "group",
+        "planNodeId": 3,
+        "nReturned": 4,
+        "executionTimeMillisEstimate": 92,
+        "opens": 1,
+        "closes": 1,
+        "isEOF": 1,
+        "groupBySlots": [9],
+        "usedDisk": false,
+        "spills": 0,
+        "spilledRecords": 0,
+        "spilledDataStorageSize": 0,
+        "inputStage": {
+          "stage": "project",
+          "planNodeId": 3,
+          "nReturned": 101341,
+          "executionTimeMillisEstimate": 84,
+          "inputStage": {
+            "stage": "nlj",
+            "planNodeId": 2,
+            "nReturned": 101341,
+            "executionTimeMillisEstimate": 80,
+            "totalDocsExamined": 101341,
+            "totalKeysExamined": 101342,
+            "collectionScans": 0,
+            "collectionSeeks": 101341,
+            "indexScans": 0,
+            "indexSeeks": 1,
+            "outerStage": {
+              "stage": "ixseek",
+              "planNodeId": 1,
+              "nReturned": 101341,
+              "executionTimeMillisEstimate": 21,
+              "indexName": "status_1_createdAt_-1",
+              "keysExamined": 101342,
+              "seeks": 1,
+              "numReads": 101342,
+              "indexKeySlot": 6
+            },
+            "innerStage": {
+              "stage": "limit",
+              "planNodeId": 2,
+              "nReturned": 101341,
+              "executionTimeMillisEstimate": 47,
+              "limit": 1,
+              "inputStage": {
+                "stage": "seek",
+                "planNodeId": 2,
+                "nReturned": 101341,
+                "executionTimeMillisEstimate": 45,
+                "numReads": 101341,
+                "fields": ["amount", "channel"]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "command": {
+    "aggregate": "orders",
+    "pipeline": [
+      { "$match": { "status": "delivered" } },
+      { "$group": { "_id": "$channel", "total": { "$sum": "$amount" }, "n": { "$sum": 1 } } }
+    ],
+    "cursor": {},
+    "$db": "mev"
+  },
+  "serverInfo": { "host": "mongo", "port": 27017, "version": "8.0.4", "gitVersion": "synthetic" },
+  "ok": 1
+}
