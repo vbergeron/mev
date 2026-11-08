@@ -27,3 +27,17 @@ npm run build      # static site in dist/
 
 The built-in examples in `src/samples/` are hand-written approximations of real explain
 output; they will be replaced by outputs captured from a live server.
+
+## CI / Release
+
+- `.github/workflows/ci.yml` runs lint, typecheck, tests and build on every push to `main` and every pull request.
+- `.github/workflows/pages.yml` runs the same checks, then publishes `dist/` to GitHub Pages when a `v*` tag is pushed:
+
+```sh
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+One-time setup: in *Settings → Pages* set **Source** to **GitHub Actions**, then in
+*Settings → Environments → github-pages → Deployment branches and tags* add a tag rule `v*`
+(by default only the default branch may deploy).
