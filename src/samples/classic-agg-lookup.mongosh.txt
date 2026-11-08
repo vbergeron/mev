@@ -1,0 +1,130 @@
+{
+  explainVersion: '1',
+  stages: [
+    {
+      '$cursor': {
+        queryPlanner: {
+          namespace: 'mev.orders',
+          parsedQuery: { createdAt: { '$gte': ISODate('2025-06-01T00:00:00.000Z') } },
+          winningPlan: {
+            stage: 'PROJECTION_SIMPLE',
+            transformBy: { amount: 1, customerId: 1, _id: 0 },
+            inputStage: {
+              stage: 'FETCH',
+              inputStage: {
+                stage: 'IXSCAN',
+                keyPattern: { createdAt: 1 },
+                indexName: 'createdAt_1',
+                isMultiKey: false,
+                direction: 'forward',
+                indexBounds: { createdAt: [ '[new Date(1748736000000), new Date(9223372036854775807)]' ] }
+              }
+            }
+          },
+          rejectedPlans: []
+        },
+        executionStats: {
+          executionSuccess: true,
+          nReturned: 19842,
+          executionTimeMillis: 1874,
+          totalKeysExamined: 19842,
+          totalDocsExamined: 19842,
+          executionStages: {
+            stage: 'PROJECTION_SIMPLE',
+            nReturned: 19842,
+            executionTimeMillisEstimate: 52,
+            works: 19843,
+            advanced: 19842,
+            transformBy: { amount: 1, customerId: 1, _id: 0 },
+            inputStage: {
+              stage: 'FETCH',
+              nReturned: 19842,
+              executionTimeMillisEstimate: 49,
+              works: 19843,
+              advanced: 19842,
+              docsExamined: 19842,
+              alreadyHasObj: 0,
+              inputStage: {
+                stage: 'IXSCAN',
+                nReturned: 19842,
+                executionTimeMillisEstimate: 8,
+                works: 19843,
+                advanced: 19842,
+                keyPattern: { createdAt: 1 },
+                indexName: 'createdAt_1',
+                isMultiKey: false,
+                direction: 'forward',
+                indexBounds: { createdAt: [ '[new Date(1748736000000), new Date(9223372036854775807)]' ] },
+                keysExamined: 19842,
+                seeks: 1,
+                dupsTested: 0,
+                dupsDropped: 0
+              }
+            }
+          }
+        }
+      },
+      nReturned: Long('19842'),
+      executionTimeMillisEstimate: Long('60')
+    },
+    {
+      '$lookup': {
+        from: 'customers',
+        as: 'c',
+        localField: 'customerId',
+        foreignField: '_id',
+        unwinding: { preserveNullAndEmptyArrays: false }
+      },
+      totalDocsExamined: Long('19842'),
+      totalKeysExamined: Long('19842'),
+      collectionScans: Long('0'),
+      indexesUsed: [ '_id_' ],
+      nReturned: Long('19842'),
+      executionTimeMillisEstimate: Long('1702')
+    },
+    {
+      '$group': {
+        _id: '$c.country',
+        revenue: { '$sum': '$amount' },
+        orders: { '$sum': { '$const': 1 } }
+      },
+      maxAccumulatorMemoryUsageBytes: { revenue: Long('1248'), orders: Long('1248') },
+      totalOutputDataSizeBytes: Long('3412'),
+      usedDisk: false,
+      spills: Long('0'),
+      spilledDataStorageSize: Long('0'),
+      numBytesSpilledEstimate: Long('0'),
+      spilledRecords: Long('0'),
+      nReturned: Long('12'),
+      executionTimeMillisEstimate: Long('1861')
+    },
+    {
+      '$sort': { sortKey: { revenue: -1 } },
+      totalDataSizeSortedBytesEstimate: Long('3912'),
+      usedDisk: false,
+      spills: Long('0'),
+      spilledDataStorageSize: Long('0'),
+      nReturned: Long('12'),
+      executionTimeMillisEstimate: Long('1861')
+    }
+  ],
+  serverInfo: {
+    host: 'mongo',
+    port: 27017,
+    version: '7.0.15',
+    gitVersion: 'synthetic'
+  },
+  command: {
+    aggregate: 'orders',
+    pipeline: [
+      { '$match': { createdAt: { '$gte': ISODate('2025-06-01T00:00:00.000Z') } } },
+      { '$lookup': { from: 'customers', localField: 'customerId', foreignField: '_id', as: 'c' } },
+      { '$unwind': '$c' },
+      { '$group': { _id: '$c.country', revenue: { '$sum': '$amount' }, orders: { '$sum': 1 } } },
+      { '$sort': { revenue: -1 } }
+    ],
+    cursor: {},
+    '$db': 'mev'
+  },
+  ok: 1
+}

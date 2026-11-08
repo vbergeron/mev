@@ -1,0 +1,78 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "mev.orders",
+    "parsedQuery": { "status": { "$eq": "delivered" } },
+    "winningPlan": {
+      "stage": "LIMIT",
+      "limitAmount": 10,
+      "inputStage": {
+        "stage": "SKIP",
+        "skipAmount": 5000,
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": { "status": 1, "createdAt": -1 },
+            "indexName": "status_1_createdAt_-1",
+            "isMultiKey": false,
+            "direction": "forward",
+            "indexBounds": { "status": ["[\"delivered\", \"delivered\"]"], "createdAt": ["[MaxKey, MinKey]"] }
+          }
+        }
+      }
+    },
+    "rejectedPlans": [{ "stage": "LIMIT" }]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 10,
+    "executionTimeMillis": 19,
+    "totalKeysExamined": 5010,
+    "totalDocsExamined": 5010,
+    "executionStages": {
+      "stage": "LIMIT",
+      "nReturned": 10,
+      "executionTimeMillisEstimate": 17,
+      "works": 5011,
+      "advanced": 10,
+      "limitAmount": 10,
+      "inputStage": {
+        "stage": "SKIP",
+        "nReturned": 10,
+        "executionTimeMillisEstimate": 17,
+        "works": 5010,
+        "advanced": 10,
+        "skipAmount": 5000,
+        "inputStage": {
+          "stage": "FETCH",
+          "nReturned": 5010,
+          "executionTimeMillisEstimate": 15,
+          "works": 5010,
+          "advanced": 5010,
+          "docsExamined": 5010,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 5010,
+            "executionTimeMillisEstimate": 3,
+            "works": 5010,
+            "advanced": 5010,
+            "keyPattern": { "status": 1, "createdAt": -1 },
+            "indexName": "status_1_createdAt_-1",
+            "isMultiKey": false,
+            "direction": "forward",
+            "indexBounds": { "status": ["[\"delivered\", \"delivered\"]"], "createdAt": ["[MaxKey, MinKey]"] },
+            "keysExamined": 5010,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      }
+    }
+  },
+  "command": { "find": "orders", "filter": { "status": "delivered" }, "sort": { "createdAt": -1 }, "skip": 5000, "limit": 10, "$db": "mev" },
+  "serverInfo": { "host": "mongo", "port": 27017, "version": "7.0.15", "gitVersion": "synthetic" },
+  "ok": 1
+}

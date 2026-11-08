@@ -1,0 +1,77 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "mev.orders",
+    "parsedQuery": { "channel": { "$eq": "store" } },
+    "indexFilterSet": false,
+    "queryHash": "8C2B1F6A",
+    "planCacheKey": "1D4E7A90",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "SORT",
+      "sortPattern": { "amount": -1 },
+      "memLimit": 104857600,
+      "limitAmount": 50,
+      "type": "simple",
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": { "channel": { "$eq": "store" } },
+        "direction": "forward"
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 50,
+    "executionTimeMillis": 143,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 200000,
+    "executionStages": {
+      "stage": "SORT",
+      "nReturned": 50,
+      "executionTimeMillisEstimate": 131,
+      "works": 200052,
+      "advanced": 50,
+      "needTime": 200001,
+      "needYield": 0,
+      "saveState": 200,
+      "restoreState": 200,
+      "isEOF": 1,
+      "sortPattern": { "amount": -1 },
+      "memLimit": 104857600,
+      "limitAmount": 50,
+      "type": "simple",
+      "totalDataSizeSorted": 18924,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": { "channel": { "$eq": "store" } },
+        "nReturned": 50113,
+        "executionTimeMillisEstimate": 118,
+        "works": 200001,
+        "advanced": 50113,
+        "needTime": 149887,
+        "needYield": 0,
+        "saveState": 200,
+        "restoreState": 200,
+        "isEOF": 1,
+        "direction": "forward",
+        "docsExamined": 200000
+      }
+    }
+  },
+  "command": {
+    "find": "orders",
+    "filter": { "channel": "store" },
+    "sort": { "amount": -1 },
+    "limit": 50,
+    "$db": "mev"
+  },
+  "serverInfo": { "host": "mongo", "port": 27017, "version": "8.0.4", "gitVersion": "synthetic" },
+  "ok": 1
+}

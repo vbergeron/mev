@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* MongoDB-flavoured greens: spring (#00ED64) to forest (#00684A) to slate (#001E2B). */
+  --color-mongo-50: #e8f8ef;
+  --color-mongo-100: #c9efd9;
+  --color-mongo-200: #9fe2bd;
+  --color-mongo-300: #6ccf9a;
+  --color-mongo-400: #00ed64;
+  --color-mongo-500: #13aa52;
+  --color-mongo-600: #00875a;
+  --color-mongo-700: #00684a;
+  --color-mongo-800: #00513b;
+  --color-mongo-900: #023430;
+  --color-mongo-950: #001e2b;
+
+  /* Warm paper background. */
+  --color-paper: #f6f2e9;
+  --color-card: #fffdf8;
+}
+
+html, body, #root { height: 100%; }
+body { @apply bg-paper text-stone-800 antialiased; }

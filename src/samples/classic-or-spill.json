@@ -1,0 +1,74 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "mev.orders",
+    "parsedQuery": { "$or": [{ "customerId": { "$eq": 42 } }, { "status": { "$eq": "returned" } }] },
+    "winningPlan": { "stage": "SUBPLAN" },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 6271,
+    "executionTimeMillis": 412,
+    "totalKeysExamined": 6283,
+    "totalDocsExamined": 6271,
+    "executionStages": {
+      "stage": "SORT",
+      "nReturned": 6271,
+      "executionTimeMillisEstimate": 398,
+      "sortPattern": { "amount": 1 },
+      "memLimit": 1048576,
+      "type": "default",
+      "totalDataSizeSorted": 3518420,
+      "usedDisk": true,
+      "spills": 4,
+      "spilledDataStorageSize": 1203321,
+      "inputStage": {
+        "stage": "SUBPLAN",
+        "nReturned": 6271,
+        "executionTimeMillisEstimate": 41,
+        "inputStage": {
+          "stage": "FETCH",
+          "nReturned": 6271,
+          "executionTimeMillisEstimate": 40,
+          "docsExamined": 6271,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "OR",
+            "nReturned": 6271,
+            "executionTimeMillisEstimate": 6,
+            "dupsTested": 6283,
+            "dupsDropped": 12,
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "nReturned": 11,
+                "executionTimeMillisEstimate": 0,
+                "keyPattern": { "customerId": 1 },
+                "indexName": "customerId_1",
+                "direction": "forward",
+                "indexBounds": { "customerId": ["[42, 42]"] },
+                "keysExamined": 11,
+                "seeks": 1
+              },
+              {
+                "stage": "IXSCAN",
+                "nReturned": 6272,
+                "executionTimeMillisEstimate": 5,
+                "keyPattern": { "status": 1, "createdAt": -1 },
+                "indexName": "status_1_createdAt_-1",
+                "direction": "forward",
+                "indexBounds": { "status": ["[\"returned\", \"returned\"]"], "createdAt": ["[MaxKey, MinKey]"] },
+                "keysExamined": 6272,
+                "seeks": 1
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "command": { "find": "orders", "filter": { "$or": [{ "customerId": 42 }, { "status": "returned" }] }, "sort": { "amount": 1 }, "$db": "mev" },
+  "serverInfo": { "host": "mongo", "port": 27017, "version": "8.0.4", "gitVersion": "synthetic" },
+  "ok": 1
+}
