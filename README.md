@@ -1,5 +1,7 @@
 # MEV — MongoDB Explain Visualizer
 
+**Live site: <https://vbergeron.github.io/mev/>**
+
 Paste the output of `.explain("executionStats")` for a `find()` or an `aggregate()`
 and read the plan as a tree, in the spirit of [explain.dalibo.com](https://explain.dalibo.com).
 Everything runs in the browser: nothing is sent anywhere.
