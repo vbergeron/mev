@@ -4,6 +4,8 @@ Paste the output of `.explain("executionStats")` for a `find()` or an `aggregate
 and read the plan as a tree, in the spirit of [explain.dalibo.com](https://explain.dalibo.com).
 Everything runs in the browser: nothing is sent anywhere.
 
+**Live site: <https://vbergeron.github.io/mev/>**
+
 - **Input**: JSON, Extended JSON, or mongosh output (`ObjectId(…)`, `ISODate(…)`, `Long(…)`, unquoted keys…).
 - **Engines**: classic and slot-based (SBE, MongoDB 7.0+). SBE stats are mapped onto the
   logical `queryPlan` by `planNodeId`; the raw slot-based plan stays available in its own tab.
